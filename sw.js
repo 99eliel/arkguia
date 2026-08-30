@@ -1,4 +1,4 @@
-const CACHE='arkguia-v2.3.0';
+const CACHE='arkguia-v2.3.1';
 const ASSETS=['./','./index.html','./manifest.webmanifest','./icon.svg','./creatures.js','./services.js','./progress-migration.js','./firebase-sync.js','./app.js'];
 self.addEventListener('install',event=>{
   self.skipWaiting();
@@ -11,8 +11,16 @@ self.addEventListener('fetch',event=>{
   if(event.request.method!=='GET') return;
   const url=new URL(event.request.url);
   if(url.origin!==self.location.origin) return;
-  event.respondWith(fetch(event.request).then(response=>{
-    if(response&&response.ok){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(event.request,copy));}
-    return response;
-  }).catch(()=>caches.match(event.request).then(cached=>cached||caches.match('./index.html'))));
+  event.respondWith((async()=>{
+    try{
+      const response=await fetch(event.request);
+      if(response&&response.ok){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(event.request,copy));}
+      return response;
+    }catch(_){
+      const cached=await caches.match(event.request);
+      if(cached) return cached;
+      if(event.request.mode==='navigate') return (await caches.match('./index.html'))||Response.error();
+      return Response.error();
+    }
+  })());
 });
