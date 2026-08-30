@@ -1,0 +1,14 @@
+{
+  "name": "ArkGuia — Astraeos",
+  "short_name": "ArkGuia",
+  "description": "Checklist de domesticação do ARK: Survival Ascended no mapa Astraeos.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#08111d",
+  "theme_color": "#0b1320",
+  "orientation": "portrait-primary",
+  "icons": [
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
