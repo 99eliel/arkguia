@@ -1,4 +1,4 @@
-const CACHE='arkguia-v2.6.2';
+const CACHE='arkguia-v2.6.3';
 const ASSETS=['./','./index.html','./manifest.webmanifest','./icon.svg','./creatures.js','./services.js','./resource-data.js','./progress-migration.js','./firebase-sync.js','./app.js','./creature-images.js'];
 self.addEventListener('install',event=>{
   self.skipWaiting();
