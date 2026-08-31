@@ -1,5 +1,10 @@
 (function(){
   'use strict';
+
+  // O catálogo de criação é um módulo independente, carregado após a interface principal existir.
+  function loadScript(src){return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.body.appendChild(s);});}
+  if(!window.ARK_CRAFTING_RECIPES){loadScript('./crafting-data.js?v=280').then(()=>loadScript('./crafting.js?v=280')).catch(()=>{});}else if(!document.querySelector('[data-mode="crafting"]')){loadScript('./crafting.js?v=280').catch(()=>{});}
+
   const dialog=document.getElementById('details');
   const body=dialog&&dialog.querySelector('.modalBody');
   const nameEl=document.getElementById('modalName');
