@@ -1,5 +1,5 @@
-const CACHE='arkguia-v2.9.2';
-const ASSETS=['./','./index.html','./manifest.webmanifest','./icon.svg','./creatures.js','./services.js','./resource-data.js','./progress-migration.js','./firebase-sync.js','./app.js','./creature-images.js','./crafting-data.js','./crafting-ptbr.js','./crafting.js','./dialog-controls.js'];
+const CACHE='arkguia-v3.0.0';
+const ASSETS=['./','./index.html','./manifest.webmanifest','./icon.svg','./creatures.js','./services.js','./resource-data.js','./progress-migration.js','./firebase-sync.js','./app.js','./creature-images.js','./crafting-data.js','./crafting-ptbr.js','./crafting.js','./dialog-controls.js','./auth-ui.js'];
 self.addEventListener('install',event=>{
   self.skipWaiting();
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));
