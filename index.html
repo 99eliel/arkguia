@@ -16,24 +16,24 @@
 </head>
 <body>
 <main class="app">
-<header class="hero"><div class="logo">🦖</div><div><h1>ArkGuia — Astraeos</h1><p>Checklist, domesticação e utilidade das criaturas</p></div></header>
-<div class="notice">O progresso é salvo primeiro neste aparelho. Quando o Firestore estiver disponível, uma cópia também é enviada para o Firebase sem impedir o uso offline.</div>
+<header class="hero"><div class="logo">🦖</div><div><h1>ArkGuia — Astraeos</h1><p>Checklist, domesticação, recursos e utilidade das criaturas</p></div></header>
+<div class="notice">O Firebase é a fonte principal do progresso. O aparelho mantém uma cópia local para uso offline e proteção caso a conexão falhe.</div>
 <section class="summary"><div class="card"><div class="small">Progresso geral</div><div class="big"><span id="doneCount">0</span> de <span id="totalCount">0</span></div><div class="progress"><div id="progressBar" class="bar"></div></div><div id="percent" class="meta" style="margin-top:8px">0% concluído</div></div><div class="card"><div class="small">Faltam domar</div><div id="leftCount" class="big">0</div><div class="meta">criaturas/variantes</div></div><div class="card"><div class="small">Domadas</div><div id="doneCard" class="big">0</div><div class="meta">criaturas/variantes</div></div></section>
 <section class="tools"><input id="search" class="field" placeholder="🔎 Buscar criatura, recurso ou função..."><select id="method" class="field"><option value="all">Todos os métodos</option><option>Nocaute</option><option>Passivo</option><option>Especial</option><option>Ovo</option><option>Filhote</option></select><select id="status" class="field"><option value="all">Todas</option><option value="todo">Não domadas</option><option value="done">Domadas</option></select><select id="variant" class="field"><option value="all">Todas as variantes</option><option value="Normal">Normais</option><option value="Aberrante">Aberrantes</option></select></section>
 <nav class="tabs" id="tabs"><button class="tab active" data-cat="all">Todas</button><button class="tab" data-cat="Terrestre">Terrestres</button><button class="tab" data-cat="Voador">Voadores</button><button class="tab" data-cat="Aquático">Aquáticos</button><button class="tab" data-cat="Aberração">Aberração</button><button class="tab" data-cat="Caverna">Cavernas</button><button class="tab" data-cat="Astraeos">Exclusivos</button></nav>
 <p id="visibleCount" class="countline">Carregando catálogo...</p><section id="list" class="grid"><div class="empty">Carregando criaturas...</div></section>
-<div class="footer">Progresso local protegido • backup no Firebase quando disponível • catálogo 2.4</div>
+<div class="footer">Firebase principal • cópia offline local • catálogo 2.5</div>
 </main>
 <button id="installBtn" class="install">⬇ Instalar ArkGuia</button>
 <dialog id="details"><div class="modalHead"><div><div class="small" id="modalCategory"></div><h2 id="modalName"></h2><div id="modalOriginal" class="original"></div></div><button class="close" onclick="details.close()">✕</button></div><div class="modalBody"><div class="info service"><b>🛠 Para que serve</b><div id="modalFunctions"></div><div id="modalUtilityText" class="meta" style="margin-top:8px"></div></div><div class="info service" id="resourceBox"><b>🌿 Recursos que coleta</b><div id="modalResources"></div></div><div class="info"><b>Método de domesticação</b><span id="modalMethod"></span></div><div class="info"><b>Melhor comida / recurso</b><span id="modalFood"></span></div><div class="info"><b>Passo a passo</b><span id="modalHow"></span></div><div class="info tip"><b>⚠ Dica importante</b><span id="modalTip"></span></div><button id="modalToggle" class="primary"></button></div></dialog>
-<script src="creatures.js?v=240"></script>
-<script src="services.js?v=240"></script>
-<script src="resource-data.js?v=240"></script>
-<script src="progress-migration.js?v=240"></script>
+<script src="creatures.js?v=250"></script>
+<script src="services.js?v=250"></script>
+<script src="resource-data.js?v=250"></script>
+<script src="progress-migration.js?v=250"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-<script src="firebase-sync.js?v=231"></script>
-<script src="app.js?v=240"></script>
+<script src="firebase-sync.js?v=250"></script>
+<script src="app.js?v=250"></script>
 </body>
 </html>
