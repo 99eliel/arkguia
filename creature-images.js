@@ -21,46 +21,23 @@
   body.insertBefore(box,body.firstChild);
 
   let token=0;
-  function fileUrl(name){
-    return 'https://ark.wiki.gg/wiki/Special:Redirect/file/'+encodeURIComponent(name+'.png');
-  }
-  function candidates(c){
-    const names=[];
-    if(c.variante==='Aberrante') names.push('Aberrant '+c.original);
-    names.push(c.original||c.nome);
-    return [...new Set(names.filter(Boolean))];
-  }
+  function fileUrl(name){return 'https://ark.wiki.gg/wiki/Special:Redirect/file/'+encodeURIComponent(name+'.png');}
+  function candidates(c){const names=[];if(c.variante==='Aberrante')names.push('Aberrant '+c.original);names.push(c.original||c.nome);return[...new Set(names.filter(Boolean))];}
+  function currentCreature(){const name=(document.getElementById('modalName')?.textContent||'').trim();return(window.ARK_CREATURES||[]).find(c=>c.nome===name)||null;}
   function show(c){
-    if(!c) return;
-    const my=++token;
-    const names=candidates(c);
-    let i=0;
+    if(!c)return;
+    const my=++token,names=candidates(c);let i=0;
     box.innerHTML='<div class="creaturePhotoState">🦖 Carregando imagem de '+c.nome+'...</div>';
-
     function tryNext(){
-      if(my!==token) return;
-      if(i>=names.length){
-        box.innerHTML='<div class="creaturePhotoState">🦖 Imagem não encontrada para esta criatura.<br><small>A ficha continua disponível normalmente.</small></div>';
-        return;
-      }
-      const img=document.createElement('img');
-      img.alt='Imagem de '+c.nome;
-      img.loading='eager';
-      img.referrerPolicy='no-referrer';
-      img.onload=()=>{
-        if(my!==token) return;
-        box.innerHTML='';
-        box.appendChild(img);
-        const credit=document.createElement('span');
-        credit.className='creaturePhotoCredit';
-        credit.textContent='ARK Wiki';
-        box.appendChild(credit);
-      };
-      img.onerror=()=>{i++;tryNext();};
-      img.src=fileUrl(names[i]);
+      if(my!==token)return;
+      if(i>=names.length){box.innerHTML='<div class="creaturePhotoState">🦖 Imagem não encontrada para esta criatura.<br><small>A ficha continua disponível normalmente.</small></div>';return;}
+      const img=document.createElement('img');img.alt='Imagem de '+c.nome;img.loading='eager';img.referrerPolicy='no-referrer';
+      img.onload=()=>{if(my!==token)return;box.innerHTML='';box.appendChild(img);const credit=document.createElement('span');credit.className='creaturePhotoCredit';credit.textContent='ARK Wiki';box.appendChild(credit);};
+      img.onerror=()=>{i++;tryNext();};img.src=fileUrl(names[i]);
     }
     tryNext();
   }
 
   window.ARK_CREATURE_IMAGES={show};
+  document.addEventListener('click',()=>{setTimeout(()=>{if(dialog.open){const c=currentCreature();if(c)show(c);}},0);});
 })();
