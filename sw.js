@@ -1,5 +1,5 @@
-const CACHE='arkguia-v2.5.0';
-const ASSETS=['./','./index.html','./manifest.webmanifest','./icon.svg','./creatures.js','./services.js','./resource-data.js','./progress-migration.js','./firebase-sync.js','./app.js'];
+const CACHE='arkguia-v2.6.0';
+const ASSETS=['./','./index.html','./manifest.webmanifest','./icon.svg','./creatures.js','./services.js','./resource-data.js','./progress-migration.js','./firebase-sync.js','./app.js','./creature-images.js'];
 self.addEventListener('install',event=>{
   self.skipWaiting();
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));
