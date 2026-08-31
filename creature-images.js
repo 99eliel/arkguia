@@ -14,30 +14,96 @@
   `;
   document.head.appendChild(style);
 
-  const box=document.createElement('div');
-  box.id='creaturePhoto';
-  box.className='creaturePhoto';
-  box.innerHTML='<div class="creaturePhotoState">🦖 Imagem da criatura</div>';
-  body.insertBefore(box,body.firstChild);
+  let box=document.getElementById('creaturePhoto');
+  if(!box){
+    box=document.createElement('div');
+    box.id='creaturePhoto';
+    box.className='creaturePhoto';
+    body.insertBefore(box,body.firstChild);
+  }
 
   let token=0;
-  function fileUrl(name){return 'https://ark.wiki.gg/wiki/Special:Redirect/file/'+encodeURIComponent(name+'.png');}
-  function candidates(c){const names=[];if(c.variante==='Aberrante')names.push('Aberrant '+c.original);names.push(c.original||c.nome);return[...new Set(names.filter(Boolean))];}
-  function currentCreature(){const name=(document.getElementById('modalName')?.textContent||'').trim();return(window.ARK_CREATURES||[]).find(c=>c.nome===name)||null;}
+  const aliases={
+    'Dire Bear':'direbear',
+    'Giant Bee':'giantbee',
+    'Dung Beetle':'dungbeetle',
+    'Snow Owl':'snowowl',
+    'Rock Drake':'rockdrake',
+    'Roll Rat':'rollrat',
+    'Nameless':'nameless',
+    'Glowtail':'glowtail',
+    'Featherlight':'featherlight',
+    'Bulbdog':'bulbdog',
+    'Shinehorn':'shinehorn',
+    'Anglerfish':'angler',
+    'Sabertooth Salmon':'sabertoothsalmon',
+    'Woolly Rhino':'woollyrhino',
+    'Procoptodon':'procoptodon',
+    'Carcharodontosaurus':'carcharodontosaurus',
+    'Giganotosaurus':'giganotosaurus',
+    'Therizinosaur':'therizinosaurus',
+    'Spino':'spinosaurus',
+    'Rex':'rex',
+    'Argentavis':'argentavis',
+    'Ankylosaurus':'ankylosaurus'
+  };
+
+  function clean(v){return (v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'');}
+  function slugCandidates(c){
+    const base=c.original||c.nome||'';
+    const a=[];
+    if(aliases[base]) a.push(aliases[base]);
+    a.push(clean(base));
+    if(c.nome&&c.nome!==base) a.push(clean(c.nome));
+    return [...new Set(a.filter(Boolean))];
+  }
+  function dododexUrl(slug){return 'https://www.dododex.com/media/creature/'+encodeURIComponent(slug)+'.png';}
+  function currentCreature(){
+    const name=(document.getElementById('modalName')?.textContent||'').trim();
+    return (window.ARK_CREATURES||[]).find(c=>c.nome===name)||null;
+  }
+
   function show(c){
-    if(!c)return;
-    const my=++token,names=candidates(c);let i=0;
+    if(!c) return;
+    const my=++token;
+    const slugs=slugCandidates(c);
+    let i=0;
     box.innerHTML='<div class="creaturePhotoState">🦖 Carregando imagem de '+c.nome+'...</div>';
+
     function tryNext(){
-      if(my!==token)return;
-      if(i>=names.length){box.innerHTML='<div class="creaturePhotoState">🦖 Imagem não encontrada para esta criatura.<br><small>A ficha continua disponível normalmente.</small></div>';return;}
-      const img=document.createElement('img');img.alt='Imagem de '+c.nome;img.loading='eager';img.referrerPolicy='no-referrer';
-      img.onload=()=>{if(my!==token)return;box.innerHTML='';box.appendChild(img);const credit=document.createElement('span');credit.className='creaturePhotoCredit';credit.textContent='ARK Wiki';box.appendChild(credit);};
-      img.onerror=()=>{i++;tryNext();};img.src=fileUrl(names[i]);
+      if(my!==token) return;
+      if(i>=slugs.length){
+        box.innerHTML='<div class="creaturePhotoState">🦖 Imagem ainda não cadastrada para esta criatura.</div>';
+        return;
+      }
+      const img=new Image();
+      img.alt='Imagem de '+c.nome;
+      img.loading='eager';
+      img.referrerPolicy='no-referrer';
+      img.onload=()=>{
+        if(my!==token) return;
+        box.innerHTML='';
+        box.appendChild(img);
+        const credit=document.createElement('span');
+        credit.className='creaturePhotoCredit';
+        credit.textContent='Imagem: Dododex';
+        box.appendChild(credit);
+      };
+      img.onerror=()=>{i++;tryNext();};
+      img.src=dododexUrl(slugs[i]);
     }
     tryNext();
   }
 
   window.ARK_CREATURE_IMAGES={show};
-  document.addEventListener('click',()=>{setTimeout(()=>{if(dialog.open){const c=currentCreature();if(c)show(c);}},0);});
+
+  // Carrega a imagem exatamente quando a ficha é aberta, sem depender de eventos de clique/toggle.
+  const nativeShowModal=dialog.showModal.bind(dialog);
+  dialog.showModal=function(){
+    nativeShowModal();
+    requestAnimationFrame(()=>{
+      const c=currentCreature();
+      if(c) show(c);
+    });
+  };
 })();
