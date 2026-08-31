@@ -101,6 +101,10 @@ PREFIXES = (
     "PrimalItem_Weapon", "PrimalItem_", "PrimalItem",
 )
 
+EXCLUDED_NAMES = {
+    "Generic Saddle", "Specimen Implant", "Second Helmet",
+}
+
 
 def fetch_source():
     req = urllib.request.Request(SOURCE, headers={
@@ -140,19 +144,45 @@ def pretty_internal(code):
     return raw.strip() or code
 
 
+def should_exclude(item):
+    name = (item.get("name") or "").strip()
+    blueprint = (item.get("blueprint") or "")
+    lower_name = name.lower()
+    lower_bp = blueprint.lower()
+    cls = class_name(blueprint).lower()
+
+    # Objetos administrativos, classes-base e variações exclusivas de missões não são
+    # receitas que o jogador normalmente escolhe fabricar no jogo.
+    if name in EXCLUDED_NAMES:
+        return True
+    if lower_name.startswith("admin ") or "weaponadmin" in lower_bp:
+        return True
+    if lower_name.startswith("base ") and ("/base/" in lower_bp or "buildingbases" in lower_bp or "coreblueprints/weapons" in lower_bp):
+        return True
+    if "/missions/" in lower_bp or "/mission/" in lower_bp or "_gauntlet" in cls:
+        return True
+    if "refill" in cls:
+        return True
+    return False
+
+
 def category(item):
     typ = (item.get("type") or "").lower()
     name = (item.get("name") or "").lower()
     blueprint = (item.get("blueprint") or "").lower()
     if "dinosaddle" in typ or "saddle" in name or "/saddles/" in blueprint:
         return "Sela"
+    if "skin" in typ or "costume" in typ or "emote" in name or "hair style" in name:
+        return "Cosmético"
+    if name.startswith("tek ") or "/tek/" in blueprint:
+        return "Tek"
     if typ == "ammo" or "ammo" in typ:
         return "Munição"
     if "weaponattachment" in typ:
         return "Acessório"
     if "weapon" in typ or "/weapons/" in blueprint:
         return "Arma / Ferramenta"
-    if "armor" in typ and "saddle" not in typ:
+    if typ.startswith("equipment/") or "armor" in typ:
         return "Armadura"
     if "structure" in typ or "/structures/" in blueprint:
         return "Estrutura"
@@ -160,10 +190,6 @@ def category(item):
         return "Recurso"
     if "consumable" in typ or "food" in typ:
         return "Consumível"
-    if "skin" in typ or "costume" in typ or "emote" in name or "hair style" in name:
-        return "Cosmético"
-    if "tek" in name:
-        return "Tek"
     return "Outros"
 
 
@@ -209,10 +235,14 @@ def main():
 
     recipes = []
     seen = set()
+    excluded = 0
     for item in items:
         crafting = item.get("crafting")
         raw_recipe = crafting.get("recipe") if isinstance(crafting, dict) else None
         if not isinstance(raw_recipe, list):
+            continue
+        if should_exclude(item):
+            excluded += 1
             continue
 
         ingredients = []
@@ -234,7 +264,6 @@ def main():
             continue
 
         name = (item.get("name") or class_name(item.get("blueprint")) or "Item").strip()
-        # Evita itens duplicados de missões/gauntlets com exatamente a mesma receita.
         signature = (name.casefold(), tuple((x[0].casefold(), x[1]) for x in ingredients), category(item))
         if signature in seen:
             continue
@@ -255,12 +284,13 @@ def main():
 
     recipes.sort(key=lambda r: (r["categoria"].casefold(), r["nome"].casefold(), r["id"]))
     meta = {
-        "schema": 2,
+        "schema": 3,
         "source": "ArkAscendedAI/sheldon-ai-for-ark (arkutils/Obelisk)",
         "sourceGame": source.get("game"),
         "sourceVersion": source.get("version"),
         "generatedAt": int(time.time()),
         "totalSourceItems": len(items),
+        "excludedInternalEntries": excluded,
         "totalCraftableRecipes": len(recipes),
     }
     payload = {**meta, "recipes": recipes}
@@ -268,7 +298,7 @@ def main():
 
     js = "(function(){'use strict';\nwindow.ARK_CRAFTING_META=" + json.dumps(meta, ensure_ascii=False, separators=(",", ":")) + ";\nwindow.ARK_CRAFTING_RECIPES=" + json.dumps(recipes, ensure_ascii=False, separators=(",", ":")) + ";\n})();\n"
     OUT_JS.write_text(js, encoding="utf-8")
-    print(f"Wrote {len(recipes)} craftable ASA recipes from {len(items)} source items")
+    print(f"Wrote {len(recipes)} player-facing craftable recipes from {len(items)} source items; excluded {excluded} internal entries")
 
 
 if __name__ == "__main__":
