@@ -27,7 +27,7 @@
     'Couro':M('🦬','Colha cadáveres de muitas criaturas terrestres. Ferramentas e dinos carnívoros aumentam o rendimento.',['Cadáveres de criaturas'],['Grande parte dos animais terrestres']),
     'Carne':M('🥩','Colha cadáveres de criaturas. Carnívoros grandes são ótimos para farm em massa.',['Cadáveres de criaturas'],['A maioria das criaturas com carne']),
     'Peixe':M('🐟','Mate e colha peixes e outras criaturas aquáticas que fornecem carne de peixe.',['Rios, lagos e oceano'],['Coelacanth','Sabertooth Salmon e outros peixes']),
-    'Óleo':M('🛢️','Minere nós de óleo ou obtenha de algumas criaturas e fontes especiais.',['Nós de óleo','Fontes submarinas'],['Algumas criaturas marinhas fornecem óleo']),
+    'Óleo':M('🛢️','Para FARMAR óleo em quantidade, minere nós de óleo com ferramenta ou criatura apropriada. O Basilosaurus NÃO coleta veios: ele apenas produz óleo passivamente no próprio inventário depois de domesticado e adulto.',['Nós de óleo submarinos','Dunkleosteus ou Ankylosaurus para mineração, conforme o local','Produção passiva no inventário de Basilosaurus/Tusoteuthis'],['Basilosaurus: produz passivamente até 20 unidades; não precisa de sela para produzir','Tusoteuthis: também produz passivamente','Besouro de Esterco: pode produzir óleo ao processar fezes']),
     'Mel':M('🍯','É obtido de colmeias de Abelha Gigante. O Dire Bear ajuda a coletar com mais segurança e eficiência.',['Colmeias de Abelha Gigante'],[]),
     'Areia':M('🏜️','Colete em rochas e depósitos apropriados de regiões desérticas. Doedicurus pode ajudar.',['Rochas/depósitos de áreas desérticas'],[]),
     'Seiva de cacto':M('🌵','Colete cactos em regiões áridas/desérticas usando ferramenta ou criatura adequada.',['Cactos'],[]),
