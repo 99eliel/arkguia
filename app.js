@@ -42,5 +42,5 @@
 
   installResourceUI();['search','method','status'].forEach(id=>$('#'+id).addEventListener(id==='search'?'input':'change',render));document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');cat=b.dataset.cat;render();});let deferredPrompt;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;$('#installBtn').style.display='block';});$('#installBtn').onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;$('#installBtn').style.display='none';};
   if(!creatures.length){list.innerHTML='<div class="empty">Erro ao carregar a lista. Atualize a página; se continuar, o catálogo de criaturas não foi carregado.</div>';$('#visibleCount').textContent='Falha ao carregar o catálogo.';}else{updateSummary();render();}
-  if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=304').catch(()=>{}));
+  if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=307').catch(()=>{}));
 })();
