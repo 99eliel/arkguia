@@ -9,6 +9,15 @@
   const catalog=current.filter(creature=>!creature.variante||creature.variante==='Normal');
   const known=new Set(catalog.map(creature=>creature.original));
 
+  // Nome exibido deve acompanhar a tradução pt-BR usada dentro do jogo.
+  // O campo `original` continua técnico/interno para preservar IDs, busca e integrações.
+  const GAME_NAMES_PTBR={
+    'Megaloceros':'Alce Gigante'
+  };
+  for(const creature of catalog){
+    if(GAME_NAMES_PTBR[creature.original])creature.nome=GAME_NAMES_PTBR[creature.original];
+  }
+
   const additions=[
     ['Celacanto','Coelacanth','Especial','Cesto de Peixe','Aquático','Coloque um Cesto de Peixe no fundo perto dele, espere o cesto ficar pronto e capture o peixe. Ao soltar o Cesto de Peixe preenchido na água, ele fica domesticado.'],
     ['Compy','Compy','Nocaute','Carneiro Cru ou Carne Nobre Crua','Terrestre','É muito frágil e acorda rápido. Deixe a carne pronta antes do nocaute e use pouco dano para não matar.'],
@@ -33,6 +42,7 @@
   window.ARK_ASTRAEOS_CATALOG={
     audited:true,
     speciesOnly:true,
+    locale:'pt-BR',
     added:additions.map(x=>x[1]),
     total:catalog.length
   };
